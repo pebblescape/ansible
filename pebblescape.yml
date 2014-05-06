@@ -1,0 +1,8 @@
+---
+- hosts: hosts
+  # accelerate: true
+  sudo: yes
+  roles:
+     - ruby
+     - nginx
+     - docker
