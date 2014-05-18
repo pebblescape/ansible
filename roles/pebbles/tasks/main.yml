@@ -1,0 +1,2 @@
+---
+- include: pebbles.yml tags=pebblescape

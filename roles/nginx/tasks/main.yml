@@ -1,2 +1,3 @@
 ---
 - include: nginx.yml tags=nginx
+  sudo: yes

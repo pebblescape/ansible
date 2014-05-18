@@ -15,3 +15,9 @@ Then run:
 ```
 ansible-playbook pebblescape.yml -v -i ./hosts
 ```
+
+If you need to enter sude password for the user, run:
+
+```
+ansible-playbook pebblescape.yml -v -i ./hosts -K
+```
