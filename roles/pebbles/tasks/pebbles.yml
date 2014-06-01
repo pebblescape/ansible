@@ -15,3 +15,7 @@
 - name: Run mike postgresql
   docker: image=pebbles/postgresql name=mike-postgresql volumes=/home/pebbles/data/postgres:/data/main
   sudo: yes
+  
+- name: Preload pebblerunner
+  command: docker pull pebbles/pebblerunner
+  sudo: yes

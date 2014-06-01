@@ -1,6 +1,8 @@
 ---
-- name: Add Ruby repo
-  apt_repository: repo=ppa:brightbox/ruby-ng
+- name: Transfer build script
+  copy: src=build.sh dest=/root/build_ruby.sh mode=0777
+  sudo: yes
 
 - name: Install Ruby
-  apt: pkg=ruby2.1 state=installed update-cache=yes
+  command: sh /root/build_ruby.sh
+  sudo: yes
