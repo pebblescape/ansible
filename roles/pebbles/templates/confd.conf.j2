@@ -1,0 +1,7 @@
+# {{ ansible_managed }}
+description "confd is a lightweight configuration management tool"
+
+start on started docker
+stop on stopping docker
+
+exec /usr/local/bin/confd

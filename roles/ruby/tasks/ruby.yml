@@ -1,8 +1,6 @@
 ---
 - name: Transfer build script
   copy: src=build.sh dest=/root/build_ruby.sh mode=0777
-  sudo: yes
 
 - name: Install Ruby
   command: sh /root/build_ruby.sh
-  sudo: yes

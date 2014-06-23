@@ -2,20 +2,18 @@
 - name: Add pebbles user and home
   user: name=pebbles shell=/bin/bash groups=sudo,docker append=yes
   register: pebbles_user
-  sudo: yes
   
 - name: Write userinfo
   template: src=userinfo.j2 dest=/home/pebbles/userinfo.json owner=pebbles group=pebbles mode=0644
-  sudo: yes
   
 - name: Run mike redis
   docker: image=pebbles/redis name=mike-redis volumes=/home/pebbles/data/redis:/var/lib/redis
-  sudo: yes
   
 - name: Run mike postgresql
   docker: image=pebbles/postgresql name=mike-postgresql volumes=/home/pebbles/data/postgres:/data/main
-  sudo: yes
   
 - name: Preload pebblerunner
   command: docker pull pebbles/pebblerunner
-  sudo: yes
+  
+- name: Run etcd
+  docker: image=coreos/etcd name=etcd ports=4001:4001 ports=7001:7001

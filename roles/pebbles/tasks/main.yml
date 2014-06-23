@@ -1,2 +1,6 @@
 ---
 - include: pebbles.yml tags=pebblescape
+  sudo: yes
+  
+- include: confd.yml tags=pebblescape,confd
+  sudo: yes

@@ -1,0 +1,56 @@
+{{range $server := .pebblescape_apps}}
+  {{with MapDir $server}}
+    upstream {{.name}} {
+      {{range $endpoint := .endpoints}}      
+        server {{$endpoint.Value}};
+      {{end}}
+    }
+
+    server {
+      listen      [::]:80;
+      listen      80;
+      server_name {{.hostname}};
+      {{if .ssl}}add_header  Alternate-Protocol  443:npn-spdy/2;{{end}}
+      {{if .sslforce}}return 301 https://$host$request_uri;{{end}}
+      location / {
+        proxy_pass  http://{{.name}};
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $http_host;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-For $remote_addr;
+        proxy_set_header X-Forwarded-Port $server_port;
+        proxy_set_header X-Request-Start $msec;
+      }
+    }
+
+    {{if .ssl}}
+      server {
+        listen      [::]:443 spdy;
+        listen      443 ssl spdy;
+        add_header  Alternate-Protocol  443:npn-spdy/2;
+        server_name {{.hostname}};
+        
+        ssl on;
+        ssl_certificate     /etc/nginx/ssl/{{.name}}.crt;
+        ssl_certificate_key /etc/nginx/ssl/{{.name}}.key;
+        ssl_protocols               SSLv3 TLSv1 TLSv1.1 TLSv1.2;
+        ssl_ciphers                 EECDH+AES128:RSA+AES128:EECDH+AES256:RSA+AES256:EECDH+3DES:RSA+3DES:EECDH+RC4:RSA+RC4:!MD5;
+        ssl_prefer_server_ciphers   on;
+
+        location / {
+          proxy_pass  http://{{.name}};
+          proxy_http_version 1.1;
+          proxy_set_header Upgrade $http_upgrade;
+          proxy_set_header Connection "upgrade";
+          proxy_set_header Host $http_host;
+          proxy_set_header X-Forwarded-Proto $scheme;
+          proxy_set_header X-Forwarded-For $remote_addr;
+          proxy_set_header X-Forwarded-Port $server_port;
+          proxy_set_header X-Request-Start $msec;
+        }
+      }
+    {{end}}
+  {{end}}
+{{end}}

@@ -1,0 +1,31 @@
+---
+- name: Download confd
+  get_url: url=https://github.com/kelseyhightower/confd/releases/download/v0.5.0-beta2/confd-0.5.0-beta2-linux-amd64 dest=/root/confd
+  
+- name: Copy confd
+  command: cp /root/confd /usr/local/bin/confd creates=/usr/local/bin/confd
+
+- name: Set confd mode
+  file: path=/usr/local/bin/confd mode=0777
+  
+- name: Make sure confd dir exists
+  file: path=/etc/confd/conf.d recurse=yes state=directory
+  
+- name: Make sure confd dir exists
+  file: path=/etc/confd/templates recurse=yes state=directory
+
+- name: Transfer confd nginx conf
+  copy: src=confd.toml dest=/etc/confd/confd.toml
+  
+- name: Transfer confd nginx conf
+  copy: src=nginx.toml dest=/etc/confd/conf.d/pebblescape.toml
+  
+- name: Transfer confd template
+  copy: src=pebblescape.tmpl dest=/etc/confd/templates/pebblescape.tmpl
+  
+- name: Transfer confd upstart script
+  template: src=confd.conf.j2 dest=/etc/init/confd.conf
+  notify: restart confd
+  
+- name: Start confd 
+  service: name=confd state=started
