@@ -1,7 +1,8 @@
 ---
-- hosts: hosts
+- hosts: all
   roles:
-     - ruby
-     - nginx
-     - docker
-     - pebbles
+    - common
+    - ruby
+    - nginx
+    - docker
+    - pebbles

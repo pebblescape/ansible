@@ -1,0 +1,49 @@
+---
+- name: Install ansible dependencies
+  raw: apt-get install -y python-simplejson python-pycurl python-passlib python-psycopg2 python-pip
+  
+- name: Install python modules
+  pip: name={{ item }}
+  with_items:
+    - docker-py
+    - virtualenv
+
+- name: Install packages
+  apt: name={{ item }} state=installed
+  with_items:
+    - ntp
+    - build-essential
+    - python-software-properties
+    - software-properties-common
+    - libssl-dev
+    - zlib1g-dev
+    - e2fslibs-dev
+    - ssl-cert
+    - git
+    - htop
+    - iftop
+    - iotop
+    - screen
+    - zsh
+    - postfix
+    - libmagickwand-dev
+    - libreadline-dev
+    - zlib1g-dev
+    - libxslt1-dev
+    - libxml2-dev
+
+- name: Configure ntp
+  template: src=ntp.conf.j2 dest=/etc/ntp.conf
+  notify: restart ntp
+
+- name: NTP should be running
+  service: name=ntp state=running enabled=yes
+
+- name: DNS config
+  template: src=resolv.conf.j2 dest=/etc/resolv.conf
+
+- name: Remove packages
+  apt: name={{ item }} state=absent
+  with_items:
+    - bind9
+    - consolekit
