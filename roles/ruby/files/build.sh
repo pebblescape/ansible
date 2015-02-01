@@ -6,10 +6,10 @@ set -x
 
 sed -i 's/^#\s*\(deb.*universe\)$/\1/g' /etc/apt/sources.list
 sed -i 's/^#\s*\(deb.*multiverse\)$/\1/g' /etc/apt/sources.list
-echo deb http://ppa.launchpad.net/brightbox/ruby-ng/ubuntu trusty main > /etc/apt/sources.list.d/ruby.list
+echo deb http://ppa.launchpad.net/brightbox/ruby-ng/ubuntu trusty main > /etc/apt/sources.list.d/ppa_brightbox_ruby_ng_trusty.list
 apt-get update
 
-apt-get install -y --force-yes --no-install-recommends linux-image-extra-`uname -r` libxml2-dev ruby2.1
+apt-get install -y --force-yes --no-install-recommends linux-image-extra-`uname -r` libxml2-dev ruby2.2
 apt-get -y remove ruby1.8
 gem update --system
 gem install bundler

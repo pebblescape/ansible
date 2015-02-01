@@ -1,2 +1,2 @@
 [host]
-localhost
+puma.rang.ee ansible_ssh_user=kris ansible_ssh_port=2341

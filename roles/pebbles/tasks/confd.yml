@@ -1,6 +1,6 @@
 ---
 - name: Download confd
-  get_url: url=https://github.com/kelseyhightower/confd/releases/download/v0.6.0-beta1/confd-0.6.0-beta1-linux-amd64 dest=/root/confd
+  get_url: url=https://github.com/kelseyhightower/confd/releases/download/v0.7.1/confd-0.7.1-linux-amd64 dest=/root/confd
   
 - name: Copy confd
   command: cp /root/confd /usr/local/bin/confd creates=/usr/local/bin/confd

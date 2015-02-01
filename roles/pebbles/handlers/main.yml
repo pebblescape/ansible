@@ -1,3 +1,6 @@
 ---
 - name: restart confd
   service: name=confd state=restarted
+  
+- name: reload nginx
+  service: name=nginx state=reload

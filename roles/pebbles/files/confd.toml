@@ -1,7 +1,16 @@
-[confd]
-confdir  = "/etc/confd"
-interval = 3
-prefix   = "/"
-etcd_nodes = [
-  "http://127.0.0.1:4001",
+backend = "etcd"
+#client_cert = "/etc/confd/ssl/client.crt"
+#client_key = "/etc/confd/ssl/client.key"
+confdir = "/etc/confd"
+debug = true
+interval = 10
+nodes = [
+  "http://localhost:4001",
 ]
+noop = false
+prefix = "/"
+quiet = false
+#scheme = "https"
+#srv_domain = "etcd.example.com"
+verbose = true
+watch = true

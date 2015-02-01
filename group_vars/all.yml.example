@@ -1,0 +1,7 @@
+---
+port: 4345
+host: pebblesinspace.com
+dbpass: pass
+mikekey: key
+raven: sentry dsn
+skylight: apikey
