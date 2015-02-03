@@ -1,7 +1,14 @@
 ---
 port: 4345
+sshport: 22
 host: pebblesinspace.com
 dbpass: pass
 mikekey: key
 raven: sentry dsn
 skylight: apikey
+
+admin:
+  name: Kris
+  email: mail@rang.ee
+  pass: somepass
+  key: ssh-rsa keykeykey

@@ -14,7 +14,7 @@
 - name: Make sure confd dir exists
   file: path=/etc/confd/templates recurse=yes state=directory
 
-- name: Transfer confd nginx conf
+- name: Transfer confd conf
   copy: src=confd.toml dest=/etc/confd/confd.toml
   
 - name: Transfer confd nginx conf
@@ -27,5 +27,5 @@
   template: src=confd.conf.j2 dest=/etc/init/confd.conf
   notify: restart confd
   
-- name: Start confd 
-  service: name=confd state=started
+- name: Restart confd 
+  service: name=confd state=restarted

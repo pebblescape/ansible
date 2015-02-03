@@ -6,36 +6,18 @@
 - name: Write userinfo
   template: src=userinfo.j2 dest=/home/pebbles/userinfo.json owner=pebbles group=pebbles mode=0644
   
-- name: Preload pebblerunner
-  command: docker pull pebbles/pebblerunner
+- name: Transfer confdcheck
+  copy: src=confdcheck dest=/home/pebbles/confdcheck
   
-- name: Run redis
-  docker: image=redis name=mike-redis state=running
+- name: Set confdcheck mode
+  file: path=/home/pebbles/confdcheck mode=0777
   
-- name: Run postgresql
-  docker: image=postgres name=mike-postgresql env="POSTGRES_PASSWORD={{dbpass}},POSTGRES_USER=mike" state=running
+- name: Load mike
+  command: docker pull pebbles/mike
+  
+- name: Run mike bootstrap
+  docker: image=pebbles/mike volumes="/var/run/docker.sock:/var/run/docker.sock" command="start boot" env="DBPASS={{dbpass}},PORT={{port}},SSHPORT={{sshport}},MIKE_AUTH_KEY={{mikekey}},RAVEN_DSN={{raven}},SKYLIGHT_AUTHENTICATION={{skylight}},SSHHOSTKEY=/etc/ssh/ssh_host_rsa_key,ADMIN_NAME={{admin.name}},ADMIN_EMAIL={{admin.email}},ADMIN_PASS={{admin.pass}},ADMIN_KEY={{admin.key}},HOSTIP={{ansible_default_ipv4.address}}" state=running
 
-- name: Create etcd volumes container
-  docker: image=busybox name=etcd-volumes volumes="/default.etcd" state=present
-  
-- name: Create receiver volumes container
-  docker: image=busybox name=mike-receiver-volumes volumes="/tmp/pebble-repos,/tmp/pebble-cache" state=present
-
-- name: Run etcd
-  docker: image=quay.io/coreos/etcd:v2.0.0 name=etcd ports=4001:4001,7001:7001 volumes_from=etcd-volumes command="-peer-addr {{ansible_default_ipv4.address}}:7001 -addr {{ansible_default_ipv4.address}}:4001 -bind-addr 0.0.0.0:4001" state=running
-  
-- name: Run mike
-  docker: image=pebbles/mike name=mike volumes="/var/run/docker.sock:/var/run/docker.sock" command="start web" ports={{port}}:5000 env="PORT=5000,DBPASS={{dbpass}},DBUSER=mike,DBNAME=mike,ETCD_HOST=etcd,RAVEN_DSN={{raven}},SKYLIGHT_AUTHENTICATION={{skylight}}" links=mike-postgresql:db,mike-redis:redis,etcd state=running
-  
-- name: Run mike worker
-  docker: image=pebbles/mike name=mike-worker volumes="/var/run/docker.sock:/var/run/docker.sock" command="start worker" env="DBPASS={{dbpass}},DBUSER=mike,DBNAME=mike,ETCD_HOST=etcd,RAVEN_DSN={{raven}},SKYLIGHT_AUTHENTICATION={{skylight}}" links=mike-postgresql:db,mike-redis:redis,etcd state=running
-  
-- name: Run mike cron
-  docker: image=pebbles/mike name=mike-cron command="start cron" env="DBPASS={{dbpass}},DBUSER=mike,DBNAME=mike,ETCD_HOST=etcd,RAVEN_DSN={{raven}},SKYLIGHT_AUTHENTICATION={{skylight}}" links=mike-postgresql:db,mike-redis:redis,etcd state=running
-  
-- name: Run receiver
-  docker: image=pebbles/receiver name=mike-receiver ports=22:22 volumes="/var/run/docker.sock:/var/run/docker.sock,/etc/ssh/ssh_host_rsa_key:/ssh_host_rsa_key" volumes_from=mike-receiver-volumes env="MIKE_AUTH_KEY={{mikekey}}" links=mike state=running
-  
 - name: Mike nginx conf
   template: src=nginx.conf.j2 dest=/etc/nginx/conf.d/mike.conf
   notify: reload nginx

@@ -1,0 +1,17 @@
+#!/usr/bin/env ruby
+require 'tempfile'
+
+file = ARGV[0]
+testfile = Tempfile.new('confdcheck')
+testfile.write("
+events {
+}
+
+
+http {
+  include #{file};
+}
+")
+testfile.close
+
+exec "nginx -t -c #{testfile.path}"
