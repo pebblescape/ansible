@@ -5,7 +5,7 @@ upstream mike {
 server {
   listen      [::]:80;
   listen      80;
-  server_name admin.{{host}};
+  server_name api.{{host}};
   # add_header  Alternate-Protocol  443:npn-spdy/2;
   # return 301 https://$host$request_uri;
   location / {
@@ -25,7 +25,7 @@ server {
 #   listen      [::]:443 spdy;
 #   listen      443 ssl spdy;
 #   add_header  Alternate-Protocol  443:npn-spdy/2;
-#   server_name admin.{{host}};
+#   server_name api.{{host}};
   
 #   ssl on;
 #   ssl_certificate     /home/pebbles/ssl/mike.crt;
