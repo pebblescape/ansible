@@ -7,7 +7,6 @@ testfile.write("
 events {
 }
 
-
 http {
   include #{file};
 }

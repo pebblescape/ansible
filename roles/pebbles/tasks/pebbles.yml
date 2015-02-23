@@ -3,20 +3,14 @@
   user: name=pebbles shell=/bin/bash groups=sudo,docker append=yes
   register: pebbles_user
   
-- name: Write userinfo
-  template: src=userinfo.j2 dest=/home/pebbles/userinfo.json owner=pebbles group=pebbles mode=0644
-  
 - name: Transfer confdcheck
-  copy: src=confdcheck dest=/home/pebbles/confdcheck
-  
-- name: Set confdcheck mode
-  file: path=/home/pebbles/confdcheck mode=0777
+  copy: src=confdcheck dest=/home/pebbles/confdcheck mode=0777
   
 - name: Load mike
   command: docker pull pebbles/mike
   
 - name: Run mike bootstrap
-  docker: image=pebbles/mike volumes="/var/run/docker.sock:/var/run/docker.sock" command="start boot" env="DBPASS={{dbpass}},PORT={{port}},SSHPORT={{sshport}},MIKE_AUTH_KEY={{mikekey}},RAVEN_DSN={{raven}},SKYLIGHT_AUTHENTICATION={{skylight}},SSHHOSTKEY=/etc/ssh/ssh_host_rsa_key,ADMIN_NAME={{admin.name}},ADMIN_EMAIL={{admin.email}},ADMIN_PASS={{admin.pass}},ADMIN_KEY={{admin.key}},HOSTIP={{ansible_default_ipv4.address}}" state=running
+  docker: image=pebbles/mike volumes="/var/run/docker.sock:/var/run/docker.sock" command="start boot" env="DBPASS={{dbpass}},PORT={{port}},RAVEN_DSN={{raven}},SKYLIGHT_AUTHENTICATION={{skylight}},ADMIN_NAME={{admin.name}},ADMIN_EMAIL={{admin.email}},ADMIN_PASS={{admin.pass}},HOSTIP={{ansible_default_ipv4.address}}" state=running
 
 - name: Mike nginx conf
   template: src=nginx.conf.j2 dest=/etc/nginx/conf.d/mike.conf

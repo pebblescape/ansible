@@ -5,7 +5,7 @@ upstream mike {
 server {
   listen      [::]:80;
   listen      80;
-  server_name api.{{host}};
+  server_name {{host}} api.{{host}} git.{{host}};
   # add_header  Alternate-Protocol  443:npn-spdy/2;
   # return 301 https://$host$request_uri;
   location / {
@@ -18,6 +18,9 @@ server {
     proxy_set_header X-Forwarded-For $remote_addr;
     proxy_set_header X-Forwarded-Port $server_port;
     proxy_set_header X-Request-Start $msec;
+    proxy_read_timeout      300;
+    proxy_connect_timeout   300;
+    proxy_redirect          off;
   }
 }
 
@@ -25,13 +28,14 @@ server {
 #   listen      [::]:443 spdy;
 #   listen      443 ssl spdy;
 #   add_header  Alternate-Protocol  443:npn-spdy/2;
-#   server_name api.{{host}};
+#   add_header Strict-Transport-Security 'max-age=31536000';
+#   server_name {{host}} api.{{host}} git.{{host}};
   
 #   ssl on;
 #   ssl_certificate     /home/pebbles/ssl/mike.crt;
 #   ssl_certificate_key /home/pebbles/ssl/mike.key;
-#   ssl_protocols               SSLv3 TLSv1 TLSv1.1 TLSv1.2;
-#   ssl_ciphers                 EECDH+AES128:RSA+AES128:EECDH+AES256:RSA+AES256:EECDH+3DES:RSA+3DES:EECDH+RC4:RSA+RC4:!MD5;
+#   ssl_protocols TLSv1.2 TLSv1.1 TLSv1;
+#   ssl_ciphers 'kEECDH+ECDSA+AES128 kEECDH+ECDSA+AES256 kEECDH+AES128 kEECDH+AES256 kEDH+AES128 kEDH+AES256 DES-CBC3-SHA +SHA !aNULL !eNULL !LOW !MD5 !EXP !DSS !PSK !SRP !kECDH !CAMELLIA !RC4 !SEED';
 #   ssl_prefer_server_ciphers   on;
 
 #   location / {
