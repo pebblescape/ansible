@@ -1,11 +1,11 @@
-backend = "etcd"
+backend = "redis"
 #client_cert = "/etc/confd/ssl/client.crt"
 #client_key = "/etc/confd/ssl/client.key"
 confdir = "/etc/confd"
 debug = true
-interval = 10
+interval = 5
 nodes = [
-  "http://localhost:4001",
+  "127.0.0.1:{{redis_port}}",
 ]
 noop = false
 prefix = "/"
@@ -13,4 +13,4 @@ quiet = false
 #scheme = "https"
 #srv_domain = "etcd.example.com"
 verbose = true
-watch = true
+watch = false

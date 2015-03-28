@@ -10,20 +10,8 @@
   command: docker pull pebbles/mike
   
 - name: Run mike bootstrap
-  docker: image=pebbles/mike volumes="/var/run/docker.sock:/var/run/docker.sock" command="start boot" env="DBPASS={{dbpass}},PORT={{port}},RAVEN_DSN={{raven}},SKYLIGHT_AUTHENTICATION={{skylight}},ADMIN_NAME={{admin.name}},ADMIN_EMAIL={{admin.email}},ADMIN_PASS={{admin.pass}},HOSTIP={{ansible_default_ipv4.address}}" state=running
+  docker: image=pebbles/mike volumes="/var/run/docker.sock:/var/run/docker.sock" command="start boot" env="DBPASS={{dbpass}},PORT={{port}},REDIS_PORT={{redis_port}},RAVEN_DSN={{raven}},SKYLIGHT_AUTHENTICATION={{skylight}},ADMIN_NAME={{admin.name}},ADMIN_EMAIL={{admin.email}},ADMIN_PASS={{admin.pass}}" state=running
 
 - name: Mike nginx conf
   template: src=nginx.conf.j2 dest=/etc/nginx/conf.d/mike.conf
   notify: reload nginx
-  
-- name: Mike cron
-  cron: name="mike minute" minute="*" job="docker exec mike /scripts/run run bundle exec rake cron:minute"
-  
-- name: Mike cron
-  cron: name="mike tenminutes" minute="*/10" job="docker exec mike /scripts/run run bundle exec rake cron:tenminutes"
-  
-- name: Mike cron
-  cron: name="mike hour" special_time=hourly job="docker exec mike /scripts/run run bundle exec rake cron:hour"
-  
-- name: Mike cron
-  cron: name="mike day" special_time=daily job="docker exec mike /scripts/run run bundle exec rake cron:day"

@@ -1,5 +1,6 @@
 ---
 port: 4345
+redis_port: 4346
 host: pebblesinspace.com
 dbpass: pass
 raven: sentry dsn
