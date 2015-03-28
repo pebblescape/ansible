@@ -10,7 +10,7 @@
   command: docker pull pebbles/mike
   
 - name: Run mike bootstrap
-  docker: image=pebbles/mike volumes="/var/run/docker.sock:/var/run/docker.sock" command="start boot" env="DBPASS={{dbpass}},PORT={{port}},REDIS_PORT={{redis_port}},RAVEN_DSN={{raven}},SKYLIGHT_AUTHENTICATION={{skylight}},ADMIN_NAME={{admin.name}},ADMIN_EMAIL={{admin.email}},ADMIN_PASS={{admin.pass}}" state=running
+  docker: image=pebbles/mike volumes="/var/run/docker.sock:/var/run/docker.sock" command="run /app/bootstrap" env="DBPASS={{dbpass}},PORT={{port}},REDIS_PORT={{redis_port}},RAVEN_DSN={{raven}},SKYLIGHT_AUTHENTICATION={{skylight}},ADMIN_NAME={{admin.name}},ADMIN_EMAIL={{admin.email}},ADMIN_PASS={{admin.pass}}" state=running
 
 - name: Mike nginx conf
   template: src=nginx.conf.j2 dest=/etc/nginx/conf.d/mike.conf
